@@ -40,7 +40,7 @@ public class FileUploadUtility implements Callable<Integer> {
 	 * Metadata about the File Upload Utility
 	 */
 	public static final String ABOUT_DATE = "2024-09-10 16:15 CST";
-	public static final String ABOUT_VERSION = "4.1.0";
+	public static final String ABOUT_VERSION = "4.1.1";
 	public static final String ABOUT_LINK = "https://developer.sailpoint.com/discuss/t/file-upload-utility/18181";
 
 	/**
@@ -390,7 +390,7 @@ public class FileUploadUtility implements Callable<Integer> {
 			 * Keyed by old source IDs; Values are new source IDs
 			 * 184744 : 2c918087701c40cf01701dfdf2c61e2a
 			 */
-			if (oldSourceReference != null && newSourceReference != null) {
+			if (oldSourceReference != null && newSourceReference != null && !oldSourceReference.equals("ccDecommissionId")) {
 				logger.debug( String.format("%1$-10s %2$-40s ", " " + oldSourceReference, " : " + newSourceReference ) );
 				sourceReferenceMap.put(oldSourceReference, newSourceReference);
 			}
