@@ -244,9 +244,9 @@ This section outlines additional details related to troubleshooting, frequently 
 
 ### File Naming Convention
 
-The File Upload Utility analyzes at the files or directories you specify, and then looks for the application’s source ID in the beginning of the file name of the file. For example, for a file named `2c918087701c40cf01701dfdf2c61e2a-AuthEmployees.csv` a source ID `2c918087701c40cf01701dfdf2c61e2a` would be returned.  A source ID is required for either account or entitlement aggregation to succeed as that is what the REST APIs require. To find the source ID, you can see this in the browser's URL in your browser, or via source REST APIs.
+The File Upload Utility analyzes at the files or directories you specify, and then looks for the application’s source name or ID in the beginning of the file name of the file. For example, for a file named `2c918087701c40cf01701dfdf2c61e2a-AuthEmployees.csv` or `AuthEmployees.csv`, a source ID `2c918087701c40cf01701dfdf2c61e2a` would be found and returned.  A source name or ID is required for either account or entitlement aggregation to succeed as that is what the REST APIs require. To find the source ID, you can see this in the browser's URL in your browser, or via source REST APIs.
 
-If File Upload Utility doesn't find the source ID in the file name, then it will skip the file and move on to the next. Everything will be logged as output, so you are able to determine which file(s) were processed or not.  To test and see if your source ID can be found, run the simple regeular expression on the file name:
+If File Upload Utility doesn't find the source name or ID in the file name, then it will skip the file and move on to the next. Everything will be logged as output, so you are able to determine which file(s) were processed or not.  To test and see if your source ID can be found, run the simple regular expression on the file name:
 
 ```regexp
 ^(\s)?([0-9a-f]{32})
