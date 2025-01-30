@@ -381,6 +381,7 @@ public class FileUploadUtility implements Callable<Integer> {
 		while (it.hasNext()) {
 
 			Source source = it.next();
+			String sourceName = source.getName();
 			String oldSourceReference = (String) source.getConnectorAttribute("cloudExternalId");
 			String newSourceReference = source.getId();
 
@@ -392,6 +393,12 @@ public class FileUploadUtility implements Callable<Integer> {
 			if (oldSourceReference != null && newSourceReference != null) {
 				logger.debug( String.format("%1$-10s %2$-40s ", " " + oldSourceReference, " : " + newSourceReference ) );
 				sourceReferenceMap.put(oldSourceReference, newSourceReference);
+			}
+
+			//Add source name to id mapping as well for lookup by name
+			if (sourceName != null && newSourceReference != null) {
+				logger.debug( String.format("%1$-10s %2$-40s ", " " + sourceName, " : " + newSourceReference ) );
+				sourceReferenceMap.put(sourceName, newSourceReference);
 			}
 		}
 
@@ -474,8 +481,24 @@ public class FileUploadUtility implements Callable<Integer> {
 		}
 
 		/*
-		 * This assumes we didn't find any source references in the file name.
+		 * Third, we will assume there are no source IDs in the file, and attempt to do
+		 * a lookup via name instead to fetch the appropriate source ID. This requires
+		 * more calls to ISC, but is more convenient for customers who don't want to
+		 * look up the ID in the UI, etc.
 		 */
-		return null;
+		String fileNameWithOutExt = file.getName().replaceFirst("[.][^.]+$", "");
+		if (this.sourceReferenceMap == null) {
+			this.sourceReferenceMap = buildSourceReferenceMap();
+		}
+		if (this.sourceReferenceMap.containsKey(fileNameWithOutExt)) {
+
+			logger.debug("\tFile [" + file.getName() + "]: Successfully resolved source name reference [" + fileNameWithOutExt + "] to new source ID reference [" + sourceReferenceMap.get(fileNameWithOutExt) + "]");
+			return sourceReferenceMap.get(fileNameWithOutExt);
+
+		} else {
+
+			logger.error("\tFile [" + file.getName() + "]: Unable to resolve source name reference [" + fileNameWithOutExt + "] to new source ID reference. This file will be skipped.");
+			return null;
+		}
 	}
 }
